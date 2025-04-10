@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Characters/WarriorBaseCharacter.h"
 #include "WarriorHeroCharacter.generated.h"
 
+class UHeroCombatComponent;
 struct FInputActionValue;
 class UDataAsset_InputConfig;
 class UCameraComponent;
@@ -50,6 +52,19 @@ private:
 
 	void InputMove(const FInputActionValue& InputValue);
 	void InputLook(const FInputActionValue& InputValue);
+
+	void InputAbilityPressed(FGameplayTag InputTag);
+	void InputAbilityReleased(FGameplayTag InputTag);
 	
-#pragma endregion 
+#pragma endregion
+
+#pragma region Combat
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UHeroCombatComponent> HeroCombatComponent;
+#pragma endregion
+
+public:
+
+	FORCEINLINE UHeroCombatComponent* GetHeroCombatComponent() const { return HeroCombatComponent; }
 };

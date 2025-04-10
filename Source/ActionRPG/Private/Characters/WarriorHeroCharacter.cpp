@@ -9,12 +9,13 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Engine/LocalPlayer.h"
-#include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "WarriorGameplayTags.h"
 #include "AbilitySystem/WarriorAbilitySystemComponent.h"
+#include "Components/Combat/HeroCombatComponent.h"
 #include "Components/Input/WarriorInputComponent.h"
 #include "DataAssets/Input/DataAsset_InputConfig.h"
+#include "DataAssets/StartupData/DataAsset_StartupDataBase.h"
 
 AWarriorHeroCharacter::AWarriorHeroCharacter()
 {
@@ -38,6 +39,8 @@ AWarriorHeroCharacter::AWarriorHeroCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.f, 0.f);
 	GetCharacterMovement()->MaxWalkSpeed = 400.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
+
+	HeroCombatComponent = CreateDefaultSubobject<UHeroCombatComponent>(TEXT("HeroCombatComponent"));
 }
 
 void AWarriorHeroCharacter::BeginPlay()
@@ -63,18 +66,20 @@ void AWarriorHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 
 	WarriorInputComponent->BindNativeInputAction(InputConfigDataAsset, WarriorGameplayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ThisClass::InputMove);
 	WarriorInputComponent->BindNativeInputAction(InputConfigDataAsset, WarriorGameplayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ThisClass::InputLook);
+
+	WarriorInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ThisClass::InputAbilityPressed, &AWarriorHeroCharacter::InputAbilityReleased);
 }
 
 void AWarriorHeroCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	if (WarriorAbilitySystemComponent && WarriorAttributeSet)
-	{	
-		const FString ASCText = FString::Printf(TEXT("Owner Actor: %s, AvatarActor: %s"),*WarriorAbilitySystemComponent->GetOwnerActor()->GetActorLabel(),*WarriorAbilitySystemComponent->GetAvatarActor()->GetActorLabel());
-
-		DebugHeader::Print(TEXT("Ability system component valid. ") + ASCText,FColor::Green);
-		DebugHeader::Print(TEXT("AttributeSet valid. ") + ASCText,FColor::Green);
+	if(!CharacterStartUpData.IsNull())
+	{
+		if(UDataAsset_StartupDataBase* LoadedData = CharacterStartUpData.LoadSynchronous())
+		{
+			LoadedData->GiveToAbilitySystemComponent(WarriorAbilitySystemComponent);
+		}
 	}
 }
 
@@ -112,6 +117,16 @@ void AWarriorHeroCharacter::InputLook(const FInputActionValue& InputValue)
 	{
 		AddControllerPitchInput(InputLook.Y);
 	}
+}
+
+void AWarriorHeroCharacter::InputAbilityPressed(FGameplayTag InputTag)
+{
+	WarriorAbilitySystemComponent->OnAbilityInputPressed(InputTag);
+}
+
+void AWarriorHeroCharacter::InputAbilityReleased(FGameplayTag InputTag)
+{
+	WarriorAbilitySystemComponent->OnAbilityInputReleased(InputTag);
 }
 
 #pragma endregion

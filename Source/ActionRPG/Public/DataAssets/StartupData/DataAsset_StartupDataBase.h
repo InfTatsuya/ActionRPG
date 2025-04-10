@@ -6,6 +6,7 @@
 #include "Engine/DataAsset.h"
 #include "DataAsset_StartupDataBase.generated.h"
 
+class UGameplayEffect;
 class UWarriorGameplayAbility;
 class UWarriorAbilitySystemComponent;
 
@@ -23,11 +24,14 @@ public:
 
 protected:
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Abilities")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="StartUpData")
 	TArray<TSubclassOf<UWarriorGameplayAbility>> ActivateOnGivenAbilities;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Abilities")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="StartUpData")
 	TArray<TSubclassOf<UWarriorGameplayAbility>> ReactiveAbilities;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="StartUpData")
+	TArray<TSubclassOf<UGameplayEffect>> StartupGameplayEffects;
 
 	void GrantAbilities(const TArray<TSubclassOf<UWarriorGameplayAbility>>& AbilitiesArray, UWarriorAbilitySystemComponent* InASC, int32 Level = 1);
 };
