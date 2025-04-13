@@ -7,6 +7,7 @@
 #include "Characters/WarriorBaseCharacter.h"
 #include "WarriorHeroCharacter.generated.h"
 
+class UHeroUIComponent;
 class UHeroCombatComponent;
 struct FInputActionValue;
 class UDataAsset_InputConfig;
@@ -23,6 +24,15 @@ class ACTIONRPG_API AWarriorHeroCharacter : public AWarriorBaseCharacter
 public:
 	
 	AWarriorHeroCharacter();
+	
+	// IPawnCombatInterface implementations
+	virtual UPawnCombatComponent* GetPawnCombatComponent() const override;
+	// End interfaces
+
+	// IPawnUIInterface implementations
+	virtual UPawnUIComponent* GetPawnUIComponent() const override;
+	virtual UHeroUIComponent* GetHeroUIComponent() const override;
+	// End interfaces
 
 protected:
 
@@ -62,6 +72,12 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UHeroCombatComponent> HeroCombatComponent;
+#pragma endregion
+
+#pragma region UI
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UHeroUIComponent> HeroUIComponent;
 #pragma endregion
 
 public:

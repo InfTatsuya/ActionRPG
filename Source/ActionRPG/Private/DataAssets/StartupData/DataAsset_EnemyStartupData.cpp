@@ -11,8 +11,6 @@ void UDataAsset_EnemyStartupData::GiveToAbilitySystemComponent(UWarriorAbilitySy
 {
 	Super::GiveToAbilitySystemComponent(InASC, Level);
 
-	DebugHeader::Print(TEXT("EnemyStartupData version"));
-
 	if(EnemyCombatAbilities.IsEmpty()) return;
 
 	for(const auto& EnemyAbility : EnemyCombatAbilities)

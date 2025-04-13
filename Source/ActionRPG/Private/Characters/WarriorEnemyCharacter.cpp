@@ -6,8 +6,11 @@
 #include "DataAssets/StartupData/DataAsset_EnemyStartupData.h"
 #include "Engine/AssetManager.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/UI/EnemyUIComponent.h"
 
 #include "DebugHeader.h"
+#include "Components/WidgetComponent.h"
+#include "Widgets/WarriorWidgetBase.h"
 
 
 AWarriorEnemyCharacter::AWarriorEnemyCharacter()
@@ -27,6 +30,36 @@ AWarriorEnemyCharacter::AWarriorEnemyCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0, 180.f, 0);
 
 	EnemyCombatComponent = CreateDefaultSubobject<UEnemyCombatComponent>(TEXT("EnemyCombatComponent"));
+
+	EnemyUIComponent = CreateDefaultSubobject<UEnemyUIComponent>(TEXT("EnemyUIComponent"));
+
+	EnemyHealthWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("EnemyWidgetComponent"));
+	EnemyHealthWidgetComponent->SetupAttachment(GetMesh());
+}
+
+UPawnCombatComponent* AWarriorEnemyCharacter::GetPawnCombatComponent() const
+{
+	return EnemyCombatComponent;
+}
+
+UPawnUIComponent* AWarriorEnemyCharacter::GetPawnUIComponent() const
+{
+	return EnemyUIComponent;
+}
+
+UEnemyUIComponent* AWarriorEnemyCharacter::GetEnemyUIComponent() const
+{
+	return EnemyUIComponent;
+}
+
+void AWarriorEnemyCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if(UWarriorWidgetBase* EnemyWidgetBase = Cast<UWarriorWidgetBase>(EnemyHealthWidgetComponent->GetUserWidgetObject()))
+	{
+		EnemyWidgetBase->InitEnemyCreatedWidget(this);
+	}
 }
 
 void AWarriorEnemyCharacter::PossessedBy(AController* NewController)
@@ -48,8 +81,6 @@ void AWarriorEnemyCharacter::InitEnemyStartupData()
 				if(UDataAsset_StartupDataBase* LoadedData = CharacterStartUpData.Get())
 				{
 					LoadedData->GiveToAbilitySystemComponent(WarriorAbilitySystemComponent);
-
-					DebugHeader::Print(TEXT("Enemy Startup Data loaded"), FColor::Green);
 				}
 			}));
 }

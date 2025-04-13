@@ -17,7 +17,8 @@ public class ActionRPG : ModuleRules
 			"GameplayTags",
 			"EnhancedInput",
 			"GameplayAbilities",
-			"GameplayTasks"
+			"GameplayTasks",
+			"UMG"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
