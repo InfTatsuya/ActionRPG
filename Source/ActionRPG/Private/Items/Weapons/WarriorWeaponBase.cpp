@@ -4,6 +4,7 @@
 #include "Items/Weapons/WarriorWeaponBase.h"
 
 #include "DebugHeader.h"
+#include "WarriorFunctionLibrary.h"
 #include "Components/BoxComponent.h"
 
 
@@ -30,7 +31,7 @@ void AWarriorWeaponBase::OnCollisionBoxBeginOverlapped(UPrimitiveComponent* Over
 
 	if(APawn* HitPawn = Cast<APawn>(OtherActor))
 	{
-		if(OwningWeaponPawn != HitPawn)
+		if(UWarriorFunctionLibrary::IsTargetPawnHostile(OwningWeaponPawn, HitPawn))
 		{
 			OnWeaponHitTargetDelegate.ExecuteIfBound(OtherActor);
 		}
@@ -45,7 +46,7 @@ void AWarriorWeaponBase::OnCollisionBoxEndOverlapped(UPrimitiveComponent* Overla
 
 	if(APawn* HitPawn = Cast<APawn>(OtherActor))
 	{
-		if(OwningWeaponPawn != HitPawn)
+		if(UWarriorFunctionLibrary::IsTargetPawnHostile(OwningWeaponPawn, HitPawn))
 		{
 			OnWeaponPullFromTargetDelegate.ExecuteIfBound(OtherActor);
 		}
