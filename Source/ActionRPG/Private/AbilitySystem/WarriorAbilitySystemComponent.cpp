@@ -26,11 +26,25 @@ void UWarriorAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag& 
 		return;
 	}
 
-	for(auto& AbilitySpec : GetActivatableAbilities())
+	for(const auto& AbilitySpec : GetActivatableAbilities())
 	{
 		if(AbilitySpec.DynamicAbilityTags.HasTagExact(InInputTag) && AbilitySpec.IsActive())
 		{
-			CancelAbilitySpec(AbilitySpec, nullptr);
+			if(UWarriorHeroGameplayAbility* HeroAbility = Cast<UWarriorHeroGameplayAbility>(AbilitySpec.Ability))
+			{
+				if(HeroAbility->DelayCancelTime > 0.f)
+				{
+					HeroAbility->CancelAbilityWithDelay(this, AbilitySpec.Handle);
+				}
+				else
+				{
+					CancelAbilityHandle(AbilitySpec.Handle);
+				}
+			}
+			else
+			{
+				CancelAbilityHandle(AbilitySpec.Handle);
+			}
 			//CancelAbilityHandle(AbilitySpec.Handle);
 		}
 	}
