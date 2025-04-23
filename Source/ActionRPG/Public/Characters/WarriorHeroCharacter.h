@@ -63,6 +63,11 @@ private:
 	void InputMove(const FInputActionValue& InputValue);
 	void InputLook(const FInputActionValue& InputValue);
 
+	void InputSwitchTargetTriggered(const FInputActionValue& InputValue);
+	void InputSwitchTargetCompleted(const FInputActionValue& InputValue);
+
+	FVector2D SwitchDirection = FVector2D::ZeroVector;
+
 	void InputAbilityPressed(FGameplayTag InputTag);
 	void InputAbilityReleased(FGameplayTag InputTag);
 	

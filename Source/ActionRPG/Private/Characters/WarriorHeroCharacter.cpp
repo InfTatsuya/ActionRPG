@@ -3,6 +3,7 @@
 
 #include "Characters/WarriorHeroCharacter.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "DebugHeader.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -85,6 +86,9 @@ void AWarriorHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	WarriorInputComponent->BindNativeInputAction(InputConfigDataAsset, WarriorGameplayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ThisClass::InputMove);
 	WarriorInputComponent->BindNativeInputAction(InputConfigDataAsset, WarriorGameplayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ThisClass::InputLook);
 
+	WarriorInputComponent->BindNativeInputAction(InputConfigDataAsset, WarriorGameplayTags::InputTag_SwitchTarget, ETriggerEvent::Triggered, this, &ThisClass::InputSwitchTargetTriggered);
+	WarriorInputComponent->BindNativeInputAction(InputConfigDataAsset, WarriorGameplayTags::InputTag_SwitchTarget, ETriggerEvent::Completed, this, &ThisClass::InputSwitchTargetCompleted);
+
 	WarriorInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ThisClass::InputAbilityPressed, &AWarriorHeroCharacter::InputAbilityReleased);
 }
 
@@ -135,6 +139,21 @@ void AWarriorHeroCharacter::InputLook(const FInputActionValue& InputValue)
 	{
 		AddControllerPitchInput(InputLook.Y);
 	}
+}
+
+void AWarriorHeroCharacter::InputSwitchTargetTriggered(const FInputActionValue& InputValue)
+{
+	SwitchDirection = InputValue.Get<FVector2D>();
+}
+
+void AWarriorHeroCharacter::InputSwitchTargetCompleted(const FInputActionValue& InputValue)
+{
+	FGameplayEventData Data;
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+		this,
+		SwitchDirection.X > 0.f ? WarriorGameplayTags::Player_Event_SwitchTarget_Right : WarriorGameplayTags::Player_Event_SwitchTarget_Left,
+		Data);
 }
 
 void AWarriorHeroCharacter::InputAbilityPressed(FGameplayTag InputTag)
