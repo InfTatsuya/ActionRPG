@@ -6,6 +6,7 @@
 #include "WarriorBaseCharacter.h"
 #include "WarriorEnemyCharacter.generated.h"
 
+class UBoxComponent;
 class UWidgetComponent;
 class UEnemyUIComponent;
 class UEnemyCombatComponent;
@@ -34,16 +35,37 @@ protected:
 
 	// APawn override
 	virtual void PossessedBy(AController* NewController) override;
-	// end APawn
+	// End override
+
+#if WITH_EDITOR
+	// UObject override
+	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
+	// End override
+#endif
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<UEnemyCombatComponent> EnemyCombatComponent;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	TObjectPtr<UBoxComponent> LeftHandCollisionBox;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
+	FName LeftHandSocketName;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	TObjectPtr<UBoxComponent> RightHandCollisionBox;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
+	FName RightHandSocketName;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
 	TObjectPtr<UEnemyUIComponent> EnemyUIComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
 	TObjectPtr<UWidgetComponent> EnemyHealthWidgetComponent;
+
+	UFUNCTION()
+	virtual void OnBodyCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
 private:
 
@@ -52,5 +74,8 @@ private:
 public:
 
 	FORCEINLINE UEnemyCombatComponent* GetEnemyCombatComponent() const { return EnemyCombatComponent; }
+
+	FORCEINLINE UBoxComponent* GetLeftHandCollisionBox() const { return LeftHandCollisionBox; }
+	FORCEINLINE UBoxComponent* GetRightHandCollisionBox() const { return RightHandCollisionBox; }
 }; 
 	

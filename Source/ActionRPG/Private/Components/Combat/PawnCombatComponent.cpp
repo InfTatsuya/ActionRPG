@@ -47,7 +47,27 @@ AWarriorWeaponBase* UPawnCombatComponent::GetCharacterCurrentEquippedWeapon() co
 	return GetCharacterCarriedWeaponByTag(CurrentEquippedWeaponTag);
 }
 
-void UPawnCombatComponent::ToggleWeaponCollision(bool bShouldEnable, EToggleDamageType ToogleDamageType)
+void UPawnCombatComponent::ToggleWeaponCollision(bool bShouldEnable, EToggleDamageType ToggleDamageType)
+{
+	if(ToggleDamageType == EToggleDamageType::CurrentEquippedWeapon)
+	{
+		ToggleCurrentEquippedWeaponCollision(bShouldEnable);
+	}
+	else
+	{
+		ToggleBodyCollisionBoxCollision(bShouldEnable, ToggleDamageType);
+	}
+}
+
+void UPawnCombatComponent::OnHitTargetActor(AActor* HitActor)
+{
+}
+
+void UPawnCombatComponent::OnWeaponPulledFromTargetActor(AActor* InteractedActor)
+{
+}
+
+void UPawnCombatComponent::ToggleCurrentEquippedWeaponCollision(bool bShouldEnable)
 {
 	AWarriorWeaponBase* CurrentWeapon = GetCharacterCurrentEquippedWeapon();
 	if(!CurrentWeapon)
@@ -67,10 +87,6 @@ void UPawnCombatComponent::ToggleWeaponCollision(bool bShouldEnable, EToggleDama
 	}
 }
 
-void UPawnCombatComponent::OnHitTargetActor(AActor* HitActor)
-{
-}
-
-void UPawnCombatComponent::OnWeaponPulledFromTargetActor(AActor* InteractedActor)
+void UPawnCombatComponent::ToggleBodyCollisionBoxCollision(bool bShouldEnable, EToggleDamageType ToggleDamageType)
 {
 }

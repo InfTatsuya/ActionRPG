@@ -22,7 +22,8 @@ public class ActionRPG : ModuleRules
 			"AIModule",
 			"AnimGraphRuntime",
 			"MotionWarping",
-			"Niagara"
+			"Niagara",
+			"NavigationSystem"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
