@@ -7,6 +7,7 @@
 #include "WarriorAbilitySystemComponent.generated.h"
 
 struct FWarriorHeroAbilitySet;
+struct FWarriorHeroSpecialAbilitySet;
 /**
  * 
  */
@@ -21,7 +22,7 @@ public:
 	void OnAbilityInputReleased(const FGameplayTag& InInputTag);
 
 	UFUNCTION(BlueprintCallable, Category = "Warrior|Ability", meta = (ApplyLevel = "1"))
-	void GrantHeroWeaponAbilities(const TArray<FWarriorHeroAbilitySet>& DefaultAbilitySet, int32 ApplyLevel, TArray<FGameplayAbilitySpecHandle>& OutGrantedAbilitySpecHandle);
+	void GrantHeroWeaponAbilities(const TArray<FWarriorHeroAbilitySet>& DefaultAbilitySet, const TArray<FWarriorHeroSpecialAbilitySet>& SpecialAbilitySet, int32 ApplyLevel, TArray<FGameplayAbilitySpecHandle>& OutGrantedAbilitySpecHandle);
 
 	UFUNCTION(BlueprintCallable, Category = "Warrior|Ability")
 	void RemoveGrantedWeaponAbility( TArray<FGameplayAbilitySpecHandle> InSpecHandlesToRemove);
