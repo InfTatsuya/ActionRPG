@@ -18,6 +18,7 @@
 #include "Components/UI/HeroUIComponent.h"
 #include "DataAssets/Input/DataAsset_InputConfig.h"
 #include "DataAssets/StartupData/DataAsset_StartupDataBase.h"
+#include "GameMode/WarriorBaseGameMode.h"
 
 AWarriorHeroCharacter::AWarriorHeroCharacter()
 {
@@ -102,7 +103,34 @@ void AWarriorHeroCharacter::PossessedBy(AController* NewController)
 	{
 		if(UDataAsset_StartupDataBase* LoadedData = CharacterStartUpData.LoadSynchronous())
 		{
-			LoadedData->GiveToAbilitySystemComponent(WarriorAbilitySystemComponent);
+			int32 AppliedLevel = 4;
+
+			if(AWarriorBaseGameMode* BaseGameMode = GetWorld()->GetAuthGameMode<AWarriorBaseGameMode>())
+			{
+				switch (BaseGameMode->GetCurrentGameDifficulty())
+				{
+				case EWarriorGameDifficulty::Easy:
+					AppliedLevel = 4;
+					break;
+					
+				case EWarriorGameDifficulty::Normal:
+					AppliedLevel = 3;
+					break;
+					
+				case EWarriorGameDifficulty::Hard:
+					AppliedLevel = 2;
+					break;
+					
+				case EWarriorGameDifficulty::Nightmare:
+					AppliedLevel = 1;
+					break;
+					
+				default:
+					break;
+				}
+			}
+			
+			LoadedData->GiveToAbilitySystemComponent(WarriorAbilitySystemComponent, AppliedLevel);
 		}
 	}
 }
