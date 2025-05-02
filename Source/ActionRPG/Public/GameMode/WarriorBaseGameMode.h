@@ -13,5 +13,9 @@ UCLASS()
 class ACTIONRPG_API AWarriorBaseGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
+
+public:
+
+	AWarriorBaseGameMode();
 	
 };

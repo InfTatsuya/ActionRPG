@@ -3,3 +3,8 @@
 
 #include "GameMode/WarriorBaseGameMode.h"
 
+AWarriorBaseGameMode::AWarriorBaseGameMode()
+{
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = true;
+}
